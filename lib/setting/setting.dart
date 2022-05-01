@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
+import 'user_setting_item.dart';
+
+
 class Setting extends StatelessWidget {
   const Setting({ Key? key }) : super(key: key);
 
@@ -9,6 +12,7 @@ class Setting extends StatelessWidget {
     return Container(
       child: ListView(
         children: [
+          UserSettingItem(),
           SettingItem(title: "前日通知の時間", widget: PreviousNotifySelector(), description: "やることの締め切り前日の通知を行う時間を設定します。"),
           SettingItem(title: "直前通知の時間", widget: RemindNotifySelector(), description: "やることの締め切り直前の通知を行う時間を設定します。"),
           SettingItem(title: "通知音を有効化", widget: SetNotificationSound(), description: "通知を行うときに音を再生するかどうかを設定します。"),
