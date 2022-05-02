@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import "firebase_options.dart";
 import 'app_home.dart';
+
+// providers
+import 'provider/auth_state_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,11 +29,25 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode:ThemeMode.system,
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          return AppHome();
-        },
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AuthStateProvider>(
+            create: (context) => AuthStateProvider(),
+          ),
+          ChangeNotifierProvider<TasksProvider>(
+            create: (context) => TasksProvider(),
+          ),
+        ],
+        child: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            context.read<AuthStateProvider>().setAuthState(
+              user: snapshot.data,
+              connection: snapshot.connectionState
+            );
+            return AppHome();
+          },
+        ),
       ),
     );
   }
