@@ -1,0 +1,113 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// firestore document class
+
+
+
+class UserDocument {
+  // initialized by client
+  UserDocument(this.name) {
+    this.updatedAt = DateTime.now();
+    this.createdAt = DateTime.now();
+  }
+
+  // initialized by firebase
+  UserDocument.fromFirestore(Map<String, Object> json) {
+    this.name = json["name"]! as String;
+    this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
+    this.createdAt = (json["createdAt"]! as Timestamp).toDate();
+  }
+  
+  late String name;
+  late DateTime updatedAt;
+  late DateTime createdAt;
+
+  // getter for firebase
+  Map<String, Object> toNewFirestore() {
+    return {
+      "name": name,
+      "updatedAt": FieldValue.serverTimestamp(),
+      "createdAt": FieldValue.serverTimestamp()
+    };
+  }
+}
+
+
+
+class CheckListItemDocument {
+  // initialized by client
+  CheckListItemDocument({required this.name, this.isChecked = false}) {
+    this.updatedAt = DateTime.now();
+    this.createdAt = DateTime.now();
+  }
+
+  // initialized by firebase
+  CheckListItemDocument.fromFirestore(Map<String, Object> json) {
+    this.name = json["name"]! as String;
+    this.isChecked = json["isChecked"]! as bool;
+    this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
+    this.createdAt = (json["createdAt"]! as Timestamp).toDate();
+  }
+
+  late String name;
+  late bool isChecked;
+  late DateTime updatedAt;
+  late DateTime createdAt;
+
+  // getter for firebase
+  Map<String, Object> toNewFirestore() {
+    return {
+      "name": name,
+      "isChecked": isChecked,
+      "updatedAt": FieldValue.serverTimestamp(),
+      "createdAt": FieldValue.serverTimestamp()
+    };
+  }
+}
+
+
+
+class TaskDocument {
+  // initialized by client
+  TaskDocument({required this.name, required this.description, this.state = this.STATE_YET, this.type = this.TYPE_NORMAL}) {
+    this.updatedAt = DateTime.now();
+    this.createdAt = DateTime.now();
+  }
+
+  // initialized by firebase
+  TaskDocument.fromFirestore(Map<String, Object> json) {
+    this.name = json["name"]! as String;
+    this.description = json["description"]! as String;
+    this.state = json["state"]! as int;
+    this.type = json["type"]! as int;
+    this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
+    this.createdAt = (json["createdAt"]! as Timestamp).toDate();
+  }
+
+  // document values
+  late String name;
+  late String description;
+  late int state;
+  late int type;
+  late DateTime updatedAt;
+  late DateTime createdAt;
+
+  
+  // constants
+  final int STATE_YET = 0;
+  final int STATE_DOING = 1;
+  final int STATE_DONE = 2;
+  final int TYPE_NORMAL = 0;
+  
+  // getter for firebase
+  Map<String, Object> toNewFirestore() {
+    return {
+      "name": name,
+      "description": description,
+      "state": state,
+      "type": type,
+      "updatedAt": FieldValue.serverTimestamp(),
+      "createdAt": FieldValue.serverTimestamp()
+    };
+  }
+}
