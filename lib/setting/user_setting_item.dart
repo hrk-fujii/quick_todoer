@@ -14,15 +14,16 @@ class UserSettingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    User? signedinUserData = context.select((AuthStateProvider authState) => authState.userData);
     return SettingItem(
-      title: "ユーザー設定",
+      title: "ログイン中のユーザー",
       widget: (context.select((AuthStateProvider authState) => authState.connectionState) == ConnectionState.waiting) ?
         Center(
           child: CircularProgressIndicator(),
         )
       : ((context.select((AuthStateProvider authState) => authState.userData) != null) ?
         RaisedButton(
-          child: Text("設定"),
+          child: Text("ユーザーの設定"),
           onPressed: (){}
         )
       : // else
@@ -35,7 +36,13 @@ class UserSettingItem extends StatelessWidget {
           },
         )
       ),
-      description: "Quick Todoer を利用するには、ログインしてください。",
+      description: (context.select((AuthStateProvider authState) => authState.connectionState) == ConnectionState.waiting) ?
+        "ログイン状態を確認しています..."
+      : ((signedinUserData != null) ?
+        'ようこそ。ユーザー情報の確認や編集、ログアウトを行うには、ユーザーの設定をタップしてください。'
+      : // else
+        "Quick Todoer を利用するには、ログインしてください。"
+      ),
     )    ;
   }
 }
