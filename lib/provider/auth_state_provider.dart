@@ -8,7 +8,7 @@ class AuthStateProvider extends ChangeNotifier {
   ConnectionState connectionState = ConnectionState.waiting;
 
   // setAuthState
-  void setAuthState({User? user, ConnectionState connection}){
+  void setAuthState({required User? user, required ConnectionState connection}){
     userData = user;
     connectionState = connection;
     notifyListeners();

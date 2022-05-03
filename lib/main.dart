@@ -34,18 +34,22 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<AuthStateProvider>(
             create: (context) => AuthStateProvider(),
           ),
-          ChangeNotifierProvider<TasksProvider>(
-            create: (context) => TasksProvider(),
-          ),
+          //ChangeNotifierProvider<TasksProvider>(
+            //create: (context) => TasksProvider(),
+          //),
         ],
         child: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            context.read<AuthStateProvider>().setAuthState(
-              user: snapshot.data,
-              connection: snapshot.connectionState
-            );
-            return AppHome();
+            if (context.select((AuthStateProvider authState) => authState.connectionState) != snapshot.connectionState || context.select((AuthStateProvider authState) => authState.userData) != snapshot.data) {
+              Future(() {
+                context.read<AuthStateProvider>().setAuthState(
+                  user: snapshot.data,
+                  connection: snapshot.connectionState
+                );
+              });
+            }
+            return const AppHome();
           },
         ),
       ),
