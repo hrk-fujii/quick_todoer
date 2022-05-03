@@ -69,7 +69,7 @@ class CheckListItemDocument {
 
 class TaskDocument {
   // initialized by client
-  TaskDocument({required this.name, required this.description, this.state = this.STATE_YET, this.type = this.TYPE_NORMAL}) {
+  TaskDocument({required this.name, required this.description, this.state = TaskDocument.STATE_YET, this.type = TaskDocument.TYPE_NORMAL}) {
     this.updatedAt = DateTime.now();
     this.createdAt = DateTime.now();
   }
@@ -94,10 +94,10 @@ class TaskDocument {
 
   
   // constants
-  final int STATE_YET = 0;
-  final int STATE_DOING = 1;
-  final int STATE_DONE = 2;
-  final int TYPE_NORMAL = 0;
+  static const int STATE_YET = 0;
+  static const int STATE_DOING = 1;
+  static const int STATE_DONE = 2;
+  static const int TYPE_NORMAL = 0;
   
   // getter for firebase
   Map<String, Object> toNewFirestore() {
