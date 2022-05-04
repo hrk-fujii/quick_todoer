@@ -11,7 +11,7 @@ class Signin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget SigninUiInstance = new SigninUI();
+    Widget SigninUiInstance = SigninUI();
     
     return Scaffold(
       appBar: AppBar(
@@ -33,8 +33,8 @@ class Signin extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _DescriptionMessage(),
-              SigninUiInstance,
+              Expanded(child: _DescriptionMessage()),
+              Expanded(child: SigninUiInstance),
             ],
           ),
         ),
@@ -42,8 +42,8 @@ class Signin extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _DescriptionMessage(),
-              SigninUiInstance,
+              Expanded(child: _DescriptionMessage()),
+              Expanded(child: SigninUiInstance),
             ],
           ),
         ),
@@ -86,26 +86,9 @@ class SigninUI extends StatefulWidget {
 
 class _SigninUIState extends State<SigninUI> {
   // input text
-  String _email = "";
-  String _password = "";
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  
-  // set input text
-
-  void _hChangeEmail(String value) {
-    setState(() {
-      _email = value;
-    });
-  }
-
-  void _hChangePassword(String value) {
-    setState(() {
-      _password = value;
-    });
-  }
-
-  // end set input text
-  
 
   // Signin
   void hSignin() async {
@@ -113,7 +96,14 @@ class _SigninUIState extends State<SigninUI> {
       context: context,
       message: "ログイン中...",
     );
-    await new Future.delayed(new Duration(seconds: 3));
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (error) {
+      debugPrint(error.code);
+    }
     Navigator.of(context, rootNavigator: true).pop();
   }
   
@@ -133,7 +123,7 @@ class _SigninUIState extends State<SigninUI> {
             padding: EdgeInsets.only(bottom: 10),
             child: TextField(
               keyboardType: TextInputType.emailAddress,
-              onChanged: _hChangeEmail,
+              controller: emailController,
             )
           ),
           Padding(
@@ -144,7 +134,7 @@ class _SigninUIState extends State<SigninUI> {
             padding: EdgeInsets.only(bottom: 20),
             child: TextField(
               obscureText: true,
-              onChanged: _hChangePassword,
+              controller: passwordController,
             )
           ),
           Center(
