@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../util/dialog.dart';
 
 // This screen used for not signed in only.
 
@@ -103,6 +106,17 @@ class _SigninUIState extends State<SigninUI> {
 
   // end set input text
   
+
+  // Signin
+  void hSignin() async {
+    showFullScreenLoadingDialog(
+      context: context,
+      message: "ログイン中...",
+    );
+    await new Future.delayed(new Duration(seconds: 3));
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+  
   
   @override
   Widget build(BuildContext context) {
@@ -141,7 +155,7 @@ class _SigninUIState extends State<SigninUI> {
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: Text("ログイン"),
                 ),
-                onPressed: () {},
+                onPressed: hSignin,
               ),
             ),
           ),
