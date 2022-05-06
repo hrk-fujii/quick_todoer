@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'task_detail.dart';
 
 // task list item
 
@@ -9,6 +10,13 @@ class TaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // on tap right side.
+    void hDetail() async {
+      await Navigator.push(context, MaterialPageRoute(
+        builder: (BuildContext context) => TaskDetail()
+      ));
+    }
+    
     return Padding(
       padding: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
       child: Container(
@@ -51,7 +59,7 @@ class TaskItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                onTap: () {},
+                onTap: hDetail,
               ),
             ),
           ],
