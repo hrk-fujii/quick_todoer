@@ -12,7 +12,7 @@ class UserDocument {
   }
 
   // initialized by firebase
-  UserDocument.fromFirestore(Map<String, Object> json) {
+  UserDocument.fromFirestore(Map<String, Object?> json) {
     this.name = json["name"]! as String;
     this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
     this.createdAt = (json["createdAt"]! as Timestamp).toDate();
@@ -23,7 +23,7 @@ class UserDocument {
   late DateTime createdAt;
 
   // getter for firebase
-  Map<String, Object> toNewFirestore() {
+  Map<String, Object?> toNewFirestore() {
     return {
       "name": name,
       "updatedAt": FieldValue.serverTimestamp(),
@@ -42,7 +42,7 @@ class CheckListItemDocument {
   }
 
   // initialized by firebase
-  CheckListItemDocument.fromFirestore(Map<String, Object> json) {
+  CheckListItemDocument.fromFirestore(Map<String, Object?> json) {
     this.name = json["name"]! as String;
     this.isChecked = json["isChecked"]! as bool;
     this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
@@ -55,7 +55,7 @@ class CheckListItemDocument {
   late DateTime createdAt;
 
   // getter for firebase
-  Map<String, Object> toNewFirestore() {
+  Map<String, Object?> toNewFirestore() {
     return {
       "name": name,
       "isChecked": isChecked,
@@ -75,7 +75,7 @@ class TaskDocument {
   }
 
   // initialized by firebase
-  TaskDocument.fromFirestore(Map<String, Object> json) {
+  TaskDocument.fromFirestore(Map<String, Object?> json) {
     this.name = json["name"]! as String;
     this.description = json["description"]! as String;
     this.state = json["state"]! as int;
@@ -100,7 +100,7 @@ class TaskDocument {
   static const int TYPE_NORMAL = 0;
   
   // getter for firebase
-  Map<String, Object> toNewFirestore() {
+  Map<String, Object?> toNewFirestore() {
     return {
       "name": name,
       "description": description,
