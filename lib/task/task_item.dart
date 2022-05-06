@@ -44,7 +44,7 @@ class TaskItem extends StatelessWidget {
           ],
         ),
         decoration: BoxDecoration(
-          border: Border.all(),
+          border: Border.all(color: Theme.of(context).colorScheme.onBackground),
           borderRadius: BorderRadius.circular(5),
         ),
       ),

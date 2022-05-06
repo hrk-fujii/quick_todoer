@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'task/task.dart';
 import 'setting/setting.dart';
 
 class AppHome extends StatefulWidget {
@@ -22,7 +23,7 @@ class _AppHomeState extends State<AppHome> {
 
   // screen list
   List<Widget> screens = [
-    Text("home"),
+    Task(),
     Setting(),
     Text("info"),
   ];
