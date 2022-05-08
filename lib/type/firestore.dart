@@ -69,7 +69,7 @@ class CheckListItemDocument {
 
 class TaskDocument {
   // initialized by client
-  TaskDocument({required this.name, required this.description, required this.deadlineAt, this.state = TaskDocument.STATE_YET, this.type = TaskDocument.TYPE_NORMAL}) {
+  TaskDocument({required this.id, required this.name, required this.description, required this.deadlineAt, this.state = TaskDocument.STATE_YET, this.type = TaskDocument.TYPE_NORMAL}) {
     this.updatedAt = DateTime.now();
     this.createdAt = DateTime.now();
   }
@@ -87,7 +87,7 @@ class TaskDocument {
   }
 
   // document values
-  String? id;
+  late String id;
   late String name;
   late String description;
   late int state;
@@ -106,6 +106,7 @@ class TaskDocument {
   // getter for firebase
   Map<String, Object?> toNewFirestore() {
     return {
+      "id": id,
       "name": name,
       "description": description,
       "state": state,
