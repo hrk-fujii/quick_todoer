@@ -67,9 +67,9 @@ class MyApp extends StatelessWidget {
                   if (snapshot.hasError) {
                     context.read<TasksProvider>().setError();
                   } else {
-                    context.read<TasksProvider>().setData((snapshot.data != null) ? snapshot.data!.docs.map((documentSnapshot) {
-                      return TaskDocument.fromFirestore(documentSnapshot.data());
-                    }).whereType<TaskDocument>().toList() : null);
+                    context.read<TasksProvider>().setDocs((snapshot.data != null) ? snapshot.data!.docs.map((documentSnapshot) {
+                      return TaskDocumentContainer(id: documentSnapshot.id, data: TaskDocument.fromFirestore(documentSnapshot.data()));
+                    }).whereType<TaskDocumentContainer>().toList() : null);
                     context.read<TasksProvider>().setConnectionState(snapshot.connectionState);
                   }
                 }

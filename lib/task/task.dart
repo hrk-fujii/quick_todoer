@@ -25,7 +25,7 @@ class Task extends StatelessWidget {
       );
     }
 
-    List<Widget> taskListItems = context.select((TasksProvider tasks) => tasks.data).map((task) => TaskItem(task)).toList();
+    List<Widget> taskListItems = context.select((TasksProvider tasks) => tasks.docs).map((task) => TaskItem(task)).toList();
 
     return Container(
       child: ListView(

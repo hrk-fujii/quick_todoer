@@ -10,7 +10,7 @@ import '../util/date.dart';
 class TaskItem extends StatelessWidget {
   @override
   
-  final TaskDocument task;
+  final TaskDocumentContainer task;
   
   TaskItem(this.task);
   
@@ -33,7 +33,7 @@ class TaskItem extends StatelessWidget {
               onPressed: (){},
               icon: Icon(
                 Icons.remove,
-                semanticLabel: "未着手の" + task.name,
+                semanticLabel: "未着手の" + task.data.name,
                 size: 50
               ),
             ),
@@ -45,21 +45,21 @@ class TaskItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      task.name,
+                      task.data.name,
                       style: TextStyle(fontSize: 15),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5),
                     Text(
-                      task.description,
+                      task.data.description,
                       textAlign: TextAlign.left,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5),
                     Text(
-                      dateToString(task.deadlineAt) + "まで。現在未着手",
+                      dateToString(task.data.deadlineAt) + "まで。現在未着手",
                       textAlign: TextAlign.right,
                     ),
                   ],

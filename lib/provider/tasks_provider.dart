@@ -6,22 +6,23 @@ import '../type/firestore.dart';
 
 // this provider has task collections.
 
+
 class TasksProvider extends ChangeNotifier {
-  List<TaskDocument> data = [];
+  List<TaskDocumentContainer> docs = [];
   ConnectionState connection = ConnectionState.waiting;
   bool hasError = false;
 
   void setError() {
-    data = [];
+    docs = [];
     hasError = true;
     notifyListeners();
   }
 
-  void setData(List<TaskDocument>? snapshotsData) {
-    if (snapshotsData != null) {
-      data = snapshotsData;
+  void setDocs(List<TaskDocumentContainer>? taskContainers) {
+    if (taskContainers != null) {
+      docs = taskContainers;
     } else {
-      data = [];
+      docs = [];
     }
     hasError = false;
     notifyListeners();
