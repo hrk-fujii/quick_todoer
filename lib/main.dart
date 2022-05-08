@@ -61,16 +61,17 @@ class MyApp extends StatelessWidget {
               return appHomeInstance;
             }
             return StreamBuilder<QuerySnapshot<Map<String, Object?>>?>(
-              stream: FirebaseFirestore.instance.collection("users").doc(snapshot.data!.uid).collection("tasks").snapshots(),
+              stream: FirebaseFirestore.instance.collection("users").doc((snapshot.data != null)? snapshot.data!.uid : "").collection("tasks").snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  context.read<TasksProvider>().setError();
-                } else {
-                  context.read<TasksProvider>().setData(snapshot.data!.docs.map((documentSnapshot) {
-                    return TaskDocument.fromFirestore(documentSnapshot.data());
-                  }).whereType<TaskDocument>().toList());
-                  context.read<TasksProvider>().setConnectionState(snapshot.connectionState);
-
+                future() {
+                  if (snapshot.hasError) {
+                    context.read<TasksProvider>().setError();
+                  } else {
+                    context.read<TasksProvider>().setData((snapshot.data != null) ? snapshot.data!.docs.map((documentSnapshot) {
+                      return TaskDocument.fromFirestore(documentSnapshot.data());
+                    }).whereType<TaskDocument>().toList() : null);
+                    context.read<TasksProvider>().setConnectionState(snapshot.connectionState);
+                  }
                 }
                 return appHomeInstance;
               }

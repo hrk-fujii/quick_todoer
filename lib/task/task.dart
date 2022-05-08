@@ -19,7 +19,7 @@ class Task extends StatelessWidget {
       );
     }
 
-    if (!context.select((TasksProvider tasks) => tasks.hasError)) {
+    if (context.select((TasksProvider tasks) => tasks.hasError)) {
       return Center(
         child: Text("やることリストの取得に失敗しました。時間をおいて、再度試してみてください。"),
       );

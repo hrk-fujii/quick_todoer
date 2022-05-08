@@ -14,6 +14,7 @@ class TasksProvider extends ChangeNotifier {
   void setError() {
     data = [];
     hasError = true;
+    notifyListeners();
   }
 
   void setData(List<TaskDocument>? snapshotsData) {
@@ -23,10 +24,12 @@ class TasksProvider extends ChangeNotifier {
       data = [];
     }
     hasError = false;
+    notifyListeners();
   }
 
   setConnectionState(connectionState) {
     connection = connectionState;
     hasError = false;
+    notifyListeners();
   }
 }
