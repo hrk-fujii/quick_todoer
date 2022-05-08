@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'task_detail.dart';
+import '../type/firestore.dart';
+import '../util/date.dart';
 
 // task list item
 
 // MEMO => done: done.all, doing: forward, yet: remove
 class TaskItem extends StatelessWidget {
-  const TaskItem({ Key? key }) : super(key: key);
-
   @override
+  
+  final TaskDocument task;
+  
+  TaskItem(this.task);
+  
   Widget build(BuildContext context) {
     // on tap right side.
     void hDetail() async {
@@ -28,7 +33,7 @@ class TaskItem extends StatelessWidget {
               onPressed: (){},
               icon: Icon(
                 Icons.remove,
-                semanticLabel: "未着手のサンプルタスク",
+                semanticLabel: "未着手の" + task.name,
                 size: 50
               ),
             ),
@@ -40,21 +45,21 @@ class TaskItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "サンプルタスク",
+                      task.name,
                       style: TextStyle(fontSize: 15),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5),
                     Text(
-                      "サンプルタスクのサンプル説明。サンプルタスクのサンプル説明。",
+                      task.description,
                       textAlign: TextAlign.left,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5),
                     Text(
-                      "2022/02/22 22:22 まで。未着手",
+                      dateToString(task.deadlineAt) + "まで。現在未着手",
                       textAlign: TextAlign.right,
                     ),
                   ],
