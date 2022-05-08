@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import "firebase_options.dart";
@@ -8,6 +9,11 @@ import 'app_home.dart';
 
 // providers
 import 'provider/auth_state_provider.dart';
+import 'provider/tasks_provider.dart';
+
+// firebase data converter
+import 'type/firestore.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +30,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const appHomeInstance = AppHome();
+    
     return MaterialApp(
       title: 'Quick Todoer',
       theme: ThemeData.light(),
@@ -34,9 +42,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<AuthStateProvider>(
             create: (context) => AuthStateProvider(),
           ),
-          //ChangeNotifierProvider<TasksProvider>(
-            //create: (context) => TasksProvider(),
-          //),
+          ChangeNotifierProvider<TasksProvider>(
+            create: (context) => TasksProvider(),
+          ),
         ],
         child: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
@@ -49,7 +57,24 @@ class MyApp extends StatelessWidget {
                 );
               });
             }
-            return const AppHome();
+            if (snapshot.data == null) {
+              return appHomeInstance;
+            }
+            return StreamBuilder<QuerySnapshot<Map<String, Object?>>?>(
+              stream: FirebaseFirestore.instance.collection("users").doc(snapshot.data!.uid).collection("tasks").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  context.read<TasksProvider>().setError();
+                } else {
+                  context.read<TasksProvider>().setData(snapshot.data!.docs.map((documentSnapshot) {
+                    return TaskDocument.fromFirestore(documentSnapshot.data());
+                  }).whereType<TaskDocument>().toList());
+                  context.read<TasksProvider>().setConnectionState(snapshot.connectionState);
+
+                }
+                return appHomeInstance;
+              }
+            );
           },
         ),
       ),
