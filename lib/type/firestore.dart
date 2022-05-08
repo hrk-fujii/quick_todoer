@@ -69,26 +69,30 @@ class CheckListItemDocument {
 
 class TaskDocument {
   // initialized by client
-  TaskDocument({required this.name, required this.description, this.state = TaskDocument.STATE_YET, this.type = TaskDocument.TYPE_NORMAL}) {
+  TaskDocument({required this.name, required this.description, required this.deadlineAt, this.state = TaskDocument.STATE_YET, this.type = TaskDocument.TYPE_NORMAL}) {
     this.updatedAt = DateTime.now();
     this.createdAt = DateTime.now();
   }
 
   // initialized by firebase
   TaskDocument.fromFirestore(Map<String, Object?> json) {
+    this.id = json["id"]! as String;
     this.name = json["name"]! as String;
     this.description = json["description"]! as String;
     this.state = json["state"]! as int;
     this.type = json["type"]! as int;
+    this.deadlineAt = (json["deadlineAt"]! as Timestamp).toDate();
     this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
     this.createdAt = (json["createdAt"]! as Timestamp).toDate();
   }
 
   // document values
+  String? id;
   late String name;
   late String description;
   late int state;
   late int type;
+  late DateTime deadlineAt;
   late DateTime updatedAt;
   late DateTime createdAt;
 
@@ -106,6 +110,7 @@ class TaskDocument {
       "description": description,
       "state": state,
       "type": type,
+      "deadlineAt": Timestamp.fromDate(deadlineAt),
       "updatedAt": FieldValue.serverTimestamp(),
       "createdAt": FieldValue.serverTimestamp()
     };
