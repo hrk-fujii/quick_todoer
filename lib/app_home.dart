@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'provider/auth_state_provider.dart';
 import 'task/task.dart';
+import 'task/add_task.dart';
 import 'setting/setting.dart';
 
 class AppHome extends StatefulWidget {
@@ -21,19 +24,29 @@ class _AppHomeState extends State<AppHome> {
   }
 
 
-  // screen list
-  List<Widget> screens = [
-    Task(),
-    Setting(),
-    Text("info"),
-  ];
 
-  
   @override
   Widget build(BuildContext context) {
+      // screen list
+    List<Widget> screens = [
+      Task(),
+      Setting(),
+      Text("info"),
+    ];
+
+    // actions list
+    List<List<Widget>?> actionLists = [
+      [
+        AddTaskButton(),
+      ],
+      null,
+      null,
+    ];
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("Quick Todoer"),
+        actions: actionLists[currentNavigationIndex],
       ),
       body: screens[currentNavigationIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -57,6 +70,28 @@ class _AppHomeState extends State<AppHome> {
           ),
         ]
       ),
+    );
+  }
+}
+
+class AddTaskButton extends StatelessWidget {
+  const AddTaskButton({ Key? key }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (context.select((AuthStateProvider authState) => authState.userData) == null) {
+      return IconButton(
+        icon: Icon(Icons.add),
+        onPressed: null,
+      );
+    }
+    return IconButton(
+      onPressed: () async {
+        await Navigator.push(context, MaterialPageRoute(
+        builder: (BuildContext context) => AddTask()
+      ));
+      },
+      icon: Icon(Icons.add, semanticLabel: 'やることを追加'),
     );
   }
 }
