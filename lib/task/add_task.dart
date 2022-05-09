@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import '../util/task.dart';
@@ -11,19 +10,19 @@ import '../provider/auth_state_provider.dart';
 // add task item for navigator
 
 class AddTask extends StatelessWidget {
-  const AddTask({ Key? key }) : super(key: key);
+  const AddTask({required this.userData});
 
-  
+  final User? userData;
+
   @override
   Widget build(BuildContext context) {
-    final User? authUser = context.select((AuthStateProvider authState) => authState.userData);
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
     final deadlineController = TextEditingController();
 
     void hAdd() async {
       final deadlineAt = numStringToDate(deadlineController.text);
-      if (deadlineAt == null || authUser == null) {
+      if (deadlineAt == null || userData == null) {
         return;
       }
       final newTask = TaskDocument(
@@ -31,7 +30,7 @@ class AddTask extends StatelessWidget {
         description: descriptionController.text,
         deadlineAt: deadlineAt
       );
-      await FirebaseFirestore.instance.collection('users').doc(authUser.uid).collection('tasks').add(newTask.toNewFirestore());
+      await FirebaseFirestore.instance.collection('users').doc(userData!.uid).collection('tasks').add(newTask.toNewFirestore());
     }
 
     

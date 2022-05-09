@@ -79,7 +79,8 @@ class AddTaskButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.select((AuthStateProvider authState) => authState.userData) == null) {
+    final userData = context.select((AuthStateProvider authState) => authState.userData);
+    if (userData == null) {
       return IconButton(
         icon: Icon(Icons.add),
         onPressed: null,
@@ -88,7 +89,7 @@ class AddTaskButton extends StatelessWidget {
     return IconButton(
       onPressed: () async {
         await Navigator.push(context, MaterialPageRoute(
-        builder: (BuildContext context) => AddTask()
+        builder: (BuildContext context) => AddTask(userData: userData)
       ));
       },
       icon: Icon(Icons.add, semanticLabel: 'やることを追加'),
