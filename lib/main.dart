@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
             return StreamBuilder<QuerySnapshot<Map<String, Object?>>?>(
               stream: FirebaseFirestore.instance.collection("users").doc((snapshot.data != null)? snapshot.data!.uid : "").collection("tasks").snapshots(),
               builder: (context, snapshot) {
-                future() {
+                Future(() {
                   if (snapshot.hasError) {
                     context.read<TasksProvider>().setError();
                   } else {
@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
                     }).whereType<TaskDocumentContainer>().toList() : null);
                     context.read<TasksProvider>().setConnectionState(snapshot.connectionState);
                   }
-                }
+                });
                 return appHomeInstance;
               }
             );
