@@ -29,13 +29,33 @@ class TaskItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              onPressed: (){},
-              icon: Icon(
-                Icons.remove,
-                semanticLabel: "未着手の" + task.data.name,
-                size: 50
-              ),
+            ((task.data.state == TaskDocument.STATE_DONE) ?
+              IconButton(
+                onPressed: (){},
+                icon: Icon(
+                  Icons.done_all,
+                  semanticLabel: "完了した" + task.data.name,
+                  size: 50
+                ),
+              )
+            : (task.data.type == TaskDocument.STATE_DOING) ?
+              IconButton(
+                onPressed: (){},
+                icon: Icon(
+                  Icons.forward,
+                  semanticLabel: "実施中の" + task.data.name,
+                  size: 50
+                ),
+              )
+            : //else
+              IconButton(
+                onPressed: (){},
+                icon: Icon(
+                  Icons.remove,
+                  semanticLabel: "未着手の" + task.data.name,
+                  size: 50
+                ),
+              )
             ),
             SizedBox(width: 10),
             Expanded(
@@ -59,7 +79,14 @@ class TaskItem extends StatelessWidget {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      dateToString(task.data.deadlineAt) + "まで。現在未着手",
+                      dateToString(task.data.deadlineAt) + "まで。 "
+                      + ((task.data.state == TaskDocument.STATE_DONE) ?
+                        "(完了)"
+                      : (task.data.state == TaskDocument.STATE_DOING) ?
+                        "(実施中)"
+                      : //else
+                        "(未着手)"
+                      ),
                       textAlign: TextAlign.right,
                     ),
                   ],
