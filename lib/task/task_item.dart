@@ -1,4 +1,8 @@
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:quick_todoer/provider/auth_state_provider.dart';
 
 import 'task_detail.dart';
 import '../type/firestore.dart';
@@ -15,11 +19,24 @@ class TaskItem extends StatelessWidget {
   TaskItem(this.task);
   
   Widget build(BuildContext context) {
+    final User? authUser = context.select((AuthStateProvider authState) => authState.userData);
+    
     // on tap right side.
     void hDetail() async {
       await Navigator.push(context, MaterialPageRoute(
         builder: (BuildContext context) => TaskDetail()
       ));
+    }
+
+    // update task's state
+    void hUpdateState(int taskTo) async {
+      if (authUser == null) {
+        return;
+      }
+      final documentRef = FirebaseFirestore.instance.collection('users').doc(authUser.uid).collection('tasks').doc(task.id);
+      debugPrint("DEBUG_LOG: kita!!");
+      await documentRef.update({"state": taskTo, "updatedAt": FieldValue.serverTimestamp()});
+      debugPrint("DEBUG_LOG: kitaKita!!");
     }
     
     return Padding(
@@ -38,9 +55,9 @@ class TaskItem extends StatelessWidget {
                   size: 50
                 ),
               )
-            : (task.data.type == TaskDocument.STATE_DOING) ?
+            : (task.data.state == TaskDocument.STATE_DOING) ?
               IconButton(
-                onPressed: (){},
+                onPressed: (){hUpdateState(TaskDocument.STATE_DONE);},
                 icon: Icon(
                   Icons.forward,
                   semanticLabel: "実施中の" + task.data.name,
@@ -49,7 +66,7 @@ class TaskItem extends StatelessWidget {
               )
             : //else
               IconButton(
-                onPressed: (){},
+                onPressed: (){hUpdateState(TaskDocument.STATE_DOING);},
                 icon: Icon(
                   Icons.remove,
                   semanticLabel: "未着手の" + task.data.name,
