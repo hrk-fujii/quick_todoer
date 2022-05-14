@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import 'edit_task.dart';
 import '../type/firestore.dart';
 import '../util/date.dart';
+import '../provider/auth_state_provider.dart';
 
 // task item detail for navigation
 
@@ -10,10 +14,22 @@ class TaskDetail extends StatelessWidget {
   @override
 
 final TaskDocumentContainer task;
+final User? authUserData;
 
-TaskDetail(this.task);
+TaskDetail(this.task, this.authUserData);
 
   Widget build(BuildContext context) {
+    // button handler
+    void hEdit() async {
+      await Navigator.push(context, MaterialPageRoute(
+        builder: (BuildContext context) => EditTask(
+          taskContainer: task,
+          userData: authUserData,
+        )
+      ));
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text("やることの詳細"),
@@ -56,7 +72,7 @@ TaskDetail(this.task);
                   children: [
                     RaisedButton(
                       child: Text("編集"),
-                      onPressed: () {},
+                      onPressed: hEdit,
                     ),
                     RaisedButton(
                       child: Text("削除"),

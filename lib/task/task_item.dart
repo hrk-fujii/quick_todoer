@@ -24,7 +24,7 @@ class TaskItem extends StatelessWidget {
     // on tap right side.
     void hDetail() async {
       await Navigator.push(context, MaterialPageRoute(
-        builder: (BuildContext context) => TaskDetail(task)
+        builder: (BuildContext context) => TaskDetail(task, authUser)
       ));
     }
 
