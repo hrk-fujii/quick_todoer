@@ -9,24 +9,47 @@ import '../provider/auth_state_provider.dart';
 
 // edit task item for navigator
 
-class EditTask extends StatelessWidget {
+class EditTask extends StatefulWidget {
   const EditTask({required this.userData, required this.taskContainer});
 
   final User? userData;
   final TaskDocumentContainer taskContainer;
 
   @override
+  State<EditTask> createState() => _EditTaskState();
+}
+
+class _EditTaskState extends State<EditTask> {
+  @override
+  void initState() {
+    super.initState();
+    _stateDropDownValue = widget.taskContainer.data.state;
+  }
+  
+  // dropdown control
+  int _stateDropDownValue = TaskDocument.STATE_YET;
+  void hChangeStateDropDown(int? value) {
+    setState(() {
+      if (value == TaskDocument.STATE_YET || value == TaskDocument.STATE_DOING || value == TaskDocument.STATE_DONE) {
+        _stateDropDownValue = value!;
+      } else {
+        _stateDropDownValue = TaskDocument.STATE_YET;
+      }
+    });
+  }
+  
+  @override
   Widget build(BuildContext context) {
-    final nameController = TextEditingController(text: taskContainer.data.name);
-    final descriptionController = TextEditingController(text: taskContainer.data.description);
-    final deadlineController = TextEditingController(text: dateToNumString(taskContainer.data.deadlineAt));
+    final nameController = TextEditingController(text: widget.taskContainer.data.name);
+    final descriptionController = TextEditingController(text: widget.taskContainer.data.description);
+    final deadlineController = TextEditingController(text: dateToNumString(widget.taskContainer.data.deadlineAt));
 
     void hEdit() async {
       final deadlineAt = numStringToDate(deadlineController.text);
-      if (deadlineAt == null || userData == null) {
+      if (deadlineAt == null || widget.userData == null) {
         return;
       }
-      await FirebaseFirestore.instance.collection('users').doc(userData!.uid).collection('tasks').doc(taskContainer.id).update({
+      await FirebaseFirestore.instance.collection('users').doc(widget.userData!.uid).collection('tasks').doc(widget.taskContainer.id).update({
         "name": nameController.text,
         "description": descriptionController.text,
         "deadlineAt": Timestamp.fromDate(deadlineAt)
@@ -68,6 +91,22 @@ class EditTask extends StatelessWidget {
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("状態 : "),
+                  DropdownButton(
+                    items: <DropdownMenuItem<int>> [
+                      DropdownMenuItem(child: Text("未着手"), value: TaskDocument.STATE_YET),
+                      DropdownMenuItem(child: Text("実施中"), value: TaskDocument.STATE_DOING),
+                      DropdownMenuItem(child: Text("完了"), value: TaskDocument.STATE_DONE),
+                    ],
+                    onChanged: hChangeStateDropDown,
+                    value: _stateDropDownValue,
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
               Text('タイトルは100文字、説明は500文字までです。'),
               Text('〆切日時の入力は、すべて数字で次のように入力します。'),
               Text('・入力の基本は、年年年年月月日日時時分分の形式です。'),
@@ -87,3 +126,4 @@ class EditTask extends StatelessWidget {
     );
   }
 }
+
