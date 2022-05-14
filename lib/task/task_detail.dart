@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../type/firestore.dart';
+import '../util/date.dart';
+
 // task item detail for navigation
 
 
 class TaskDetail extends StatelessWidget {
-  const TaskDetail({ Key? key }) : super(key: key);
-
   @override
+
+final TaskDocumentContainer task;
+
+TaskDetail(this.task);
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -23,19 +29,27 @@ class TaskDetail extends StatelessWidget {
                 Text("タイトル :"),
                 SizedBox(height: 5),
                 Text(
-                  "サンプルタスク",
+                  task.data.name,
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(height: 10),
                 Text("説明 :"),
                 SizedBox(height: 5),
-                Text("サンプルタスクの説明。サンプルタスクの説明。サンプルタスクの説明。"),
+                Text(task.data.description),
                 SizedBox(height: 10),
-                Text("締切日時 : 2022/02/22 22:22"),
+                Text("状態 : " + ((task.data.state == TaskDocument.STATE_DONE) ? 
+                  "すでに完了しています。"
+                : (task.data.state == TaskDocument.STATE_DOING) ?
+                  "現在、実施中です。"
+                : //else
+                  "まだ未着手です。"
+                )),
                 SizedBox(height: 10),
-                Text("最終更新日時 : 2022/02/22 10:22"),
+                Text("〆切日時 : " + dateToString(task.data.deadlineAt, DATE_RESULTTYPE_JP)),
                 SizedBox(height: 10),
-                Text("作成日時 : 2022/02/20 22:20"),
+                Text("最終更新日時 : " + dateToString(task.data.updatedAt, DATE_RESULTTYPE_JP)),
+                SizedBox(height: 10),
+                Text("作成日時 : " + dateToString(task.data.createdAt, DATE_RESULTTYPE_JP)),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
