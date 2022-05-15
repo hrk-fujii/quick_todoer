@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../util/task.dart';
+import '../util//dialog.dart';
 import '../type/firestore.dart';
 import '../provider/auth_state_provider.dart';
 
@@ -49,11 +50,16 @@ class _EditTaskState extends State<EditTask> {
       if (deadlineAt == null || widget.userData == null) {
         return;
       }
-      await FirebaseFirestore.instance.collection('users').doc(widget.userData!.uid).collection('tasks').doc(widget.taskContainer.id).update({
+      showFullScreenLoadingDialog(context: context, message: "");
+      FirebaseFirestore.instance.collection('users').doc(widget.userData!.uid).collection('tasks').doc(widget.taskContainer.id).update({
         "name": nameController.text,
         "description": descriptionController.text,
-        "deadlineAt": Timestamp.fromDate(deadlineAt)
+        "state": _stateDropDownValue,
+        "deadlineAt": Timestamp.fromDate(deadlineAt),
+        "updatedAt": FieldValue.serverTimestamp(),
       });
+      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.pop(context);
     }
 
     
@@ -115,7 +121,7 @@ class _EditTaskState extends State<EditTask> {
               Text('・年を省略すると本年となります。'),
               Text('・1文字目に9を入力すると、本日を指定できます。'),
               SizedBox(height: 20),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('編集確定'),
                 onPressed: hEdit,
               ),
