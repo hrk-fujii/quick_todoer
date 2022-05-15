@@ -76,7 +76,7 @@ class AddTask extends StatelessWidget {
               Text('・年を省略すると本年となります。'),
               Text('・1文字目に9を入力すると、本日を指定できます。'),
               SizedBox(height: 20),
-              RaisedButton(
+              ElevatedButton(
                 child: Text('追加'),
                 onPressed: hAdd,
               ),

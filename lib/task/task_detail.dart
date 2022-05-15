@@ -70,11 +70,11 @@ TaskDetail(this.task, this.authUserData);
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text("編集"),
                       onPressed: hEdit,
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text("削除"),
                       onPressed: () {},
                     ),

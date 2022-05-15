@@ -23,12 +23,12 @@ class UserSettingItem extends StatelessWidget {
           child: CircularProgressIndicator(),
         )
       : ((context.select((AuthStateProvider authState) => authState.userData) != null) ?
-        RaisedButton(
+        ElevatedButton(
           child: Text("ユーザーの設定"),
           onPressed: (){}
         )
       : // else
-        RaisedButton(
+        ElevatedButton(
           child: Text("ログイン"),
           onPressed: () async {
             await Navigator.push(context, MaterialPageRoute(

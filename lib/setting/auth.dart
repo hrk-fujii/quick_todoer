@@ -140,7 +140,7 @@ class _SigninUIState extends State<SigninUI> {
           Center(
             child: Padding(
               padding: EdgeInsets.only(bottom: 30),
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Padding(
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: Text("ログイン"),
@@ -152,11 +152,11 @@ class _SigninUIState extends State<SigninUI> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              OutlineButton(
+              OutlinedButton(
                 child: Text("パスワードリセット"),
                 onPressed: () {},
               ),
-              OutlineButton(
+              OutlinedButton(
                 child: Text("アカウント作成"),
                 onPressed: () {},
               ),
