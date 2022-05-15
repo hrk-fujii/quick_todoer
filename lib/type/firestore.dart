@@ -88,7 +88,7 @@ class TaskDocument {
     this.state = json["state"]! as int;
     this.type = json["type"]! as int;
     this.deadlineAt = (json["deadlineAt"]! as Timestamp).toDate();
-    this.updatedAt = (json["updatedAt"]! as Timestamp).toDate();
+    this.updatedAt = (json["updatedAt"] == null) ? DateTime.now() : (json["updatedAt"] as Timestamp).toDate();
     this.createdAt = (json["createdAt"]! as Timestamp).toDate();
   }
 
