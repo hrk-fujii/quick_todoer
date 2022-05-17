@@ -121,3 +121,44 @@ class TaskDocument {
     };
   }
 }
+
+class ChecklistItemDocumentContainer {
+  final String id;
+  final ChecklistItemDocument data;
+
+  ChecklistItemDocumentContainer({required this.id, required this.data});
+}
+
+
+class ChecklistItemDocument {
+  // initialized by client
+  ChecklistItemDocument({required this.name, required this.isDone}) {
+    this.updatedAt = DateTime.now();
+    this.createdAt = DateTime.now();
+  }
+
+  // initialized by firebase
+  ChecklistItemDocument.fromFirestore(Map<String, Object?> json) {
+    this.name = json["name"]! as String;
+    this.isDone = json["isDone"]! as bool;
+    this.updatedAt = (json["updatedAt"] == null) ? DateTime.now() : (json["updatedAt"] as Timestamp).toDate();
+    this.createdAt = (json["createdAt"]! as Timestamp).toDate();
+  }
+
+  // document values
+  late String name;
+  late bool isDone;
+  late DateTime updatedAt;
+  late DateTime createdAt;
+  
+  // getter for firebase
+  Map<String, Object?> toNewFirestore() {
+    return {
+      "name": name,
+      "isDone": isDone,
+      "updatedAt": FieldValue.serverTimestamp(),
+      "createdAt": FieldValue.serverTimestamp()
+    };
+  }
+}
+
