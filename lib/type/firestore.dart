@@ -142,7 +142,7 @@ class ChecklistItemDocument {
     this.name = json["name"]! as String;
     this.isDone = json["isDone"]! as bool;
     this.updatedAt = (json["updatedAt"] == null) ? DateTime.now() : (json["updatedAt"] as Timestamp).toDate();
-    this.createdAt = (json["createdAt"]! as Timestamp).toDate();
+    this.createdAt = (json["createdAt"] == null) ? DateTime.now() : (json["createdAt"] as Timestamp).toDate();
   }
 
   // document values
