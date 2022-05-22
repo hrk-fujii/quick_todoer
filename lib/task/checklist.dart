@@ -5,28 +5,84 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 // check list for navigator
 
-class Checklist extends StatefulWidget {
-  const Checklist({Key? key}) : super(key: key);
-
-  @override
-  State<Checklist> createState() => _ChecklistState();
-}
-
-class _ChecklistState extends State<Checklist> {
+class Checklist extends StatelessWidget {
+  final User authUser;
+  final TaskDocumentContainer taskContainer;
+  
+  const Checklist({required this.taskContainer, required this.authUser});
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("チェックリスト"),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [],
+        // text controller
+    final addItemTextController = TextEditingController();
+    
+    // button handler
+    void hAdd() async {
+      final collectionRef = FirebaseFirestore.instance.collection("users").doc(authUser.uid).collection("tasks").doc(taskContainer.id).collection("checklist");
+      collectionRef.add(ChecklistItemDocument(
+        name: addItemTextController.text,
+        isDone: false
+      ).toNewFirestore());
+    }
+    // end button handler
+    
+    return StreamBuilder<QuerySnapshot<Map<String, Object?>>?>(
+      stream: FirebaseFirestore.instance.collection("users").doc(authUser.uid).collection("tasks").doc(taskContainer.id).collection("checklist").snapshots(),
+      builder: (context, snapshot) {
+        List<Widget> items = [];
+        if (snapshot.data != null) {
+          items = snapshot.data!.docs.map((element) => _ChecklistItem(
+            itemContainer: ChecklistItemDocumentContainer(
+              data: ChecklistItemDocument.fromFirestore(element.data()),
+              id: element.id
+            ),
+            authUser: authUser
+          )).toList();
+        } else {
+          items = [];
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("チェックリスト"),
           ),
-        ),
-      ),
+          body: Container(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder()
+                        ),
+                        controller: addItemTextController,
+                        maxLength: 100,
+                        maxLines: 1,
+                      ),
+                    ),
+                    SizedBox(width: 20,),
+                    ElevatedButton(
+                      child: Text("追加"),
+                      onPressed: hAdd,
+                    )
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: items,
+                    ),
+                  ),
+                ),
+                Text("現在オフライン"),
+              ],
+            ),
+          ),
+        );
+      }
     );
   }
 }
