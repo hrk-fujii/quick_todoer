@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,6 +41,45 @@ TaskDetail(this.task, this.authUserData);
           authUser: authUserData!,
         )
       ));
+    }
+    
+    void hDelete() async {
+      final result = await showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text("やることの削除"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("このやることを削除しますか？"),
+              SizedBox(height: 20,),
+              Text(task.data.name),
+            ],
+          ),
+          actions: [
+            SimpleDialogOption(
+              child: Text("いいえ"),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            SimpleDialogOption(
+              child: Text("はい"),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+        ),
+      );
+      if (result == true) {
+        // delete and back
+        if (authUserData != null) {
+          FirebaseFirestore.instance.collection('users').doc(authUserData!.uid).collection('tasks').doc(task.id).delete();
+        }
+        Navigator.pop(context);
+      }
     }
     // end button handler
 
@@ -94,7 +134,7 @@ TaskDetail(this.task, this.authUserData);
                     ),
                     ElevatedButton(
                       child: Text("削除"),
-                      onPressed: () {},
+                      onPressed: hDelete,
                     ),
                   ],
                 )
