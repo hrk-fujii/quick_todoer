@@ -13,7 +13,7 @@ class Checklist extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-        // text controller
+    // text controller
     final addItemTextController = TextEditingController();
     
     // button handler
@@ -98,11 +98,16 @@ class _ChecklistItem extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final documentRef = FirebaseFirestore.instance.collection('users').doc(authUser.uid).collection('tasks').doc(taskContainer.id).collection('checklist').doc(itemContainer.id);documentRef.update({
-      "isDone": value!,
+    final documentRef = FirebaseFirestore.instance.collection('users').doc(authUser.uid).collection('tasks').doc(taskContainer.id).collection('checklist').doc(itemContainer.id);
+    documentRef.update({
+      "isDone": value,
       "updatedAt": FieldValue.serverTimestamp()
     });
+  }
 
+  void hDelete() {
+    final documentRef = FirebaseFirestore.instance.collection('users').doc(authUser.uid).collection('tasks').doc(taskContainer.id).collection('checklist').doc(itemContainer.id);
+    documentRef.delete();
   }
 
   @override
@@ -122,7 +127,7 @@ class _ChecklistItem extends StatelessWidget {
           ),
           SizedBox(width: 10),
           TextButton(
-            onPressed: () {},
+            onPressed: hDelete,
             child: Text("削除")
           ),
         ],
