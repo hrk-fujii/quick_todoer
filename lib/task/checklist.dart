@@ -62,7 +62,7 @@ class Checklist extends StatelessWidget {
                         maxLines: 1,
                       ),
                     ),
-                    SizedBox(width: 20,),
+                    SizedBox(width: 10),
                     ElevatedButton(
                       child: Text("追加"),
                       onPressed: hAdd,
@@ -97,13 +97,16 @@ class _ChecklistItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Checkbox(
             value: itemContainer.data.isDone,
             onChanged: null,
           ),
           SizedBox(width: 10),
-          Text(itemContainer.data.name),
+          Expanded(
+            child: Text(itemContainer.data.name),
+          ),
           SizedBox(width: 10),
           TextButton(
             onPressed: () {},
