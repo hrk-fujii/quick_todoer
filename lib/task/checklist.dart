@@ -32,6 +32,7 @@ class Checklist extends StatelessWidget {
         List<Widget> items = [];
         if (snapshot.data != null) {
           items = snapshot.data!.docs.map((element) => _ChecklistItem(
+            taskContainer: taskContainer,
             itemContainer: ChecklistItemDocumentContainer(
               data: ChecklistItemDocument.fromFirestore(element.data()),
               id: element.id
@@ -88,9 +89,21 @@ class Checklist extends StatelessWidget {
 }
 
 class _ChecklistItem extends StatelessWidget {
-  final User? authUser;
+  final User authUser;
+  final TaskDocumentContainer taskContainer;
   final ChecklistItemDocumentContainer itemContainer;
-  const _ChecklistItem({required this.itemContainer, required this.authUser});
+  const _ChecklistItem({required this.itemContainer, required this.taskContainer, required this.authUser});
+
+  void hCheckbox(bool? value) {
+    if (value == null) {
+      return;
+    }
+    final documentRef = FirebaseFirestore.instance.collection('users').doc(authUser.uid).collection('tasks').doc(taskContainer.id).collection('checklist').doc(itemContainer.id);documentRef.update({
+      "isDone": value!,
+      "updatedAt": FieldValue.serverTimestamp()
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +114,7 @@ class _ChecklistItem extends StatelessWidget {
         children: [
           Checkbox(
             value: itemContainer.data.isDone,
-            onChanged: null,
+            onChanged: hCheckbox,
           ),
           SizedBox(width: 10),
           Expanded(
