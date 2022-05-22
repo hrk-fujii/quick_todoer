@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'edit_task.dart';
+import 'checklist.dart';
 import '../type/firestore.dart';
 import '../util/date.dart';
 import '../provider/auth_state_provider.dart';
@@ -28,6 +29,19 @@ TaskDetail(this.task, this.authUserData);
         )
       ));
     }
+
+    void hChecklist() async {
+      if (authUserData == null) {
+        return;
+      }
+      await Navigator.push(context, MaterialPageRoute(
+        builder: (BuildContext context) => Checklist(
+          taskContainer: task,
+          authUser: authUserData!,
+        )
+      ));
+    }
+    // end button handler
 
 
     return Scaffold(
@@ -73,6 +87,10 @@ TaskDetail(this.task, this.authUserData);
                     ElevatedButton(
                       child: Text("編集"),
                       onPressed: hEdit,
+                    ),
+                    ElevatedButton(
+                      child: Text("チェックリスト"),
+                      onPressed: hChecklist,
                     ),
                     ElevatedButton(
                       child: Text("削除"),
