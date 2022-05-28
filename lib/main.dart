@@ -14,9 +14,13 @@ import 'provider/tasks_provider.dart';
 // firebase data converter
 import 'type/firestore.dart';
 
+// local notification utils
+import 'util/local_notification.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeLocalNotification();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
