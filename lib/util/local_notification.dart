@@ -9,7 +9,7 @@ Future<FlutterLocalNotificationsPlugin> initializeLocalNotification() async {
         FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('ic_launcher');
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
             // onDidReceiveLocalNotification: onDidReceiveLocalNotification
