@@ -11,7 +11,15 @@ class TasksProvider extends ChangeNotifier {
   List<TaskDocumentContainer> docs = [];
   ConnectionState connection = ConnectionState.waiting;
   bool hasError = false;
+  bool hasPendingWrites = false;
 
+  void setHasPendingWrites(bool? pendingWrites) {
+    if (pendingWrites == null) {
+      pendingWrites = false;
+    }
+    hasPendingWrites = pendingWrites;
+  }
+  
   void setError() {
     docs = [];
     hasError = true;

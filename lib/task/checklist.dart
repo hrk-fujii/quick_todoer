@@ -42,6 +42,7 @@ class Checklist extends StatelessWidget {
         } else {
           items = [];
         }
+        
         return Scaffold(
           appBar: AppBar(
             title: Text("チェックリスト"),
@@ -78,7 +79,13 @@ class Checklist extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text("現在オフライン"),
+                Text((snapshot.data == null) ? 
+                  "データがありません。"
+                : ((snapshot.data!.metadata.hasPendingWrites) ?
+                  "同期を待機中..."
+                : //else
+                  "最新の状態"
+                )),
               ],
             ),
           ),

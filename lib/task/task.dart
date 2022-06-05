@@ -26,10 +26,18 @@ class Task extends StatelessWidget {
     }
 
     List<Widget> taskListItems = context.select((TasksProvider tasks) => tasks.docs).map((task) => TaskItem(task)).toList();
+    final bool hasPendingWrites = context.select((TasksProvider task) => task.hasPendingWrites);
 
     return Container(
-      child: ListView(
-        children: taskListItems,
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              children: taskListItems,
+            ),
+          ),
+          Text((hasPendingWrites) ? "同期を待機中..." : "最新の状態"),
+        ],
       ),
     );
   }

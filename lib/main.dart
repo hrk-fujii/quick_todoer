@@ -16,6 +16,7 @@ import 'type/firestore.dart';
 
 // local notification utils
 import 'util/local_notification.dart';
+import 'util/notification.dart';
 
 
 void main() async {
@@ -71,9 +72,12 @@ class MyApp extends StatelessWidget {
                   if (snapshot.hasError) {
                     context.read<TasksProvider>().setError();
                   } else {
-                    context.read<TasksProvider>().setDocs((snapshot.data != null) ? snapshot.data!.docs.map((documentSnapshot) {
+                    final containers = (snapshot.data != null) ? snapshot.data!.docs.map((documentSnapshot) {
                       return TaskDocumentContainer(id: documentSnapshot.id, data: TaskDocument.fromFirestore(documentSnapshot.data()));
-                    }).whereType<TaskDocumentContainer>().toList() : null);
+                    }).whereType<TaskDocumentContainer>().toList() : null;
+                    setNotificationFromTaskDocumentContainers(taskContainers: containers);
+                    context.read<TasksProvider>().setHasPendingWrites((snapshot.data != null) ? snapshot.data!.metadata.hasPendingWrites : null);
+                    context.read<TasksProvider>().setDocs(containers);
                     context.read<TasksProvider>().setConnectionState(snapshot.connectionState);
                   }
                 });

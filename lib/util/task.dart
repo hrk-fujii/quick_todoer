@@ -34,6 +34,7 @@ DateTime? numStringToDate(String value) {
         return null;
       }
       if (value.length == 12 && int.parse(value.substring(10, 12)) >= 0 && int.parse(value.substring(10, 12)) <= 59) {
+        hour = int.parse(value.substring(8, 10));
         minute = int.parse(value.substring(10, 12));
       } else if (value.length == 12) {
         return null;
@@ -63,6 +64,7 @@ DateTime? numStringToDate(String value) {
         return null;
       }
       if (value.length == 8 && int.parse(value.substring(6, 8)) >= 0 && int.parse(value.substring(6, 8)) <= 59) {
+        hour = int.parse(value.substring(4, 6));
         minute = int.parse(value.substring(6, 8));
       } else if (value.length == 8) {
         return null;
@@ -85,7 +87,8 @@ DateTime? numStringToDate(String value) {
       } else if (value.length == 3) {
         return null;
       }
-      if (value.length == 8 && int.parse(value.substring(3, 5)) >= 0 && int.parse(value.substring(3, 5)) <= 59) {
+      if (value.length == 5 && int.parse(value.substring(3, 5)) >= 0 && int.parse(value.substring(3, 5)) <= 59) {
+        hour = int.parse(value.substring(1, 3));
         minute = int.parse(value.substring(3, 5));
       } else if (value.length == 5) {
         return null;
