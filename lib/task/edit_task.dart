@@ -58,8 +58,11 @@ class _EditTaskState extends State<EditTask> {
         "deadlineAt": Timestamp.fromDate(deadlineAt),
         "updatedAt": FieldValue.serverTimestamp(),
       });
+      final newTask = TaskDocument(name: nameController.text, description: descriptionController.text, deadlineAt: deadlineAt);
+      newTask.state = _stateDropDownValue;
+      newTask.createdAt = DateTime.now();
       Navigator.of(context, rootNavigator: true).pop();
-      Navigator.pop(context);
+      Navigator.pop(context, newTask);
     }
 
     

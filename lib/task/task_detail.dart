@@ -12,33 +12,44 @@ import '../provider/auth_state_provider.dart';
 // task item detail for navigation
 
 
-class TaskDetail extends StatelessWidget {
+class TaskDetail extends StatefulWidget {
   @override
 
-final TaskDocumentContainer task;
+late TaskDocumentContainer task;
 final User? authUserData;
 
 TaskDetail(this.task, this.authUserData);
 
+  @override
+  State<TaskDetail> createState() => _TaskDetailState();
+}
+
+class _TaskDetailState extends State<TaskDetail> {
   Widget build(BuildContext context) {
     // button handler
     void hEdit() async {
-      await Navigator.push(context, MaterialPageRoute(
+      final result = await Navigator.push(context, MaterialPageRoute(
         builder: (BuildContext context) => EditTask(
-          taskContainer: task,
-          userData: authUserData,
+          taskContainer: widget.task,
+          userData: widget.authUserData,
         )
       ));
+      // update view if returned task document
+      if (result is TaskDocument) {
+        setState(() {
+          widget.task = TaskDocumentContainer(id: widget.task.id, data: result);
+        });
+      }
     }
 
     void hChecklist() async {
-      if (authUserData == null) {
+      if (widget.authUserData == null) {
         return;
       }
       await Navigator.push(context, MaterialPageRoute(
         builder: (BuildContext context) => Checklist(
-          taskContainer: task,
-          authUser: authUserData!,
+          taskContainer: widget.task,
+          authUser: widget.authUserData!,
         )
       ));
     }
@@ -54,7 +65,7 @@ TaskDetail(this.task, this.authUserData);
             children: [
               Text("このやることを削除しますか？"),
               SizedBox(height: 20,),
-              Text(task.data.name),
+              Text(widget.task.data.name),
             ],
           ),
           actions: [
@@ -75,8 +86,8 @@ TaskDetail(this.task, this.authUserData);
       );
       if (result == true) {
         // delete and back
-        if (authUserData != null) {
-          FirebaseFirestore.instance.collection('users').doc(authUserData!.uid).collection('tasks').doc(task.id).delete();
+        if (widget.authUserData != null) {
+          FirebaseFirestore.instance.collection('users').doc(widget.authUserData!.uid).collection('tasks').doc(widget.task.id).delete();
         }
         Navigator.pop(context);
       }
@@ -99,27 +110,27 @@ TaskDetail(this.task, this.authUserData);
                 Text("タイトル :"),
                 SizedBox(height: 5),
                 Text(
-                  task.data.name,
+                  widget.task.data.name,
                   style: TextStyle(fontSize: 20),
                 ),
                 SizedBox(height: 10),
                 Text("説明 :"),
                 SizedBox(height: 5),
-                Text(task.data.description),
+                Text(widget.task.data.description),
                 SizedBox(height: 10),
-                Text("状態 : " + ((task.data.state == TaskDocument.STATE_DONE) ? 
+                Text("状態 : " + ((widget.task.data.state == TaskDocument.STATE_DONE) ? 
                   "すでに完了しています。"
-                : (task.data.state == TaskDocument.STATE_DOING) ?
+                : (widget.task.data.state == TaskDocument.STATE_DOING) ?
                   "現在、実施中です。"
                 : //else
                   "まだ未着手です。"
                 )),
                 SizedBox(height: 10),
-                Text("〆切日時 : " + dateToString(task.data.deadlineAt, DATE_RESULTTYPE_JP)),
+                Text("〆切日時 : " + dateToString(widget.task.data.deadlineAt, DATE_RESULTTYPE_JP)),
                 SizedBox(height: 10),
-                Text("最終更新日時 : " + dateToString(task.data.updatedAt, DATE_RESULTTYPE_JP)),
+                Text("最終更新日時 : " + dateToString(widget.task.data.updatedAt, DATE_RESULTTYPE_JP)),
                 SizedBox(height: 10),
-                Text("作成日時 : " + dateToString(task.data.createdAt, DATE_RESULTTYPE_JP)),
+                Text("作成日時 : " + dateToString(widget.task.data.createdAt, DATE_RESULTTYPE_JP)),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
