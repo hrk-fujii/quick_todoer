@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'setting.dart';
 import 'auth.dart';
+import 'user_setting.dart';
 import '../type/firestore.dart';
 import '../provider/auth_state_provider.dart';
 
@@ -25,7 +26,11 @@ class UserSettingItem extends StatelessWidget {
       : ((context.select((AuthStateProvider authState) => authState.userData) != null) ?
         ElevatedButton(
           child: Text("ユーザーの設定"),
-          onPressed: (){}
+          onPressed: ()async {
+            await Navigator.push(context, MaterialPageRoute(
+              builder: (context) => UserSetting()
+            ));
+          }
         )
       : // else
         ElevatedButton(
